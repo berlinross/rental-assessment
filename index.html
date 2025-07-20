@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Interactive Condo Investment Dashboard with AI Analysis</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="config.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+		rel="stylesheet">
+	<style>
+		:root {
+			--primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			--secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+			--success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+			--warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+			--danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+			--glass-bg: rgba(255, 255, 255, 0.1);
+			--glass-border: rgba(255, 255, 255, 0.2);
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Inter', sans-serif;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
+			color: #1a202c;
+			overflow-x: hidden;
+		}
+
+		.glass-card {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			border-radius: 20px;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		}
+
+		.glass-card-hover {
+			transition: all 0.3s ease;
+		}
+
+		.glass-card-hover:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+		}
+
+		.gradient-text {
+			background: var(--primary-gradient);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		.btn-primary {
+			background: var(--primary-gradient);
+			border: none;
+			color: white;
+			padding: 12px 24px;
+			border-radius: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+		}
+
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+		}
+
+		.btn-secondary {
+			background: rgba(255, 255, 255, 0.9);
+			border: 2px solid rgba(102, 126, 234, 0.3);
+			color: #667eea;
+			padding: 12px 24px;
+			border-radius: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.btn-secondary:hover {
+			background: rgba(102, 126, 234, 0.1);
+			border-color: #667eea;
+		}
+
+		.input-field {
+			background: rgba(255, 255, 255, 0.9);
+			border: 2px solid rgba(102, 126, 234, 0.2);
+			border-radius: 12px;
+			padding: 12px 16px;
+			font-size: 16px;
+			transition: all 0.3s ease;
+			width: 100%;
+		}
+
+		.input-field:focus {
+			outline: none;
+			border-color: #667eea;
+			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+			background: white;
+		}
+
+		.kpi-card {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 24px;
+			text-align: center;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			transition: all 0.3s ease;
+		}
+
+		.kpi-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+		}
+
+		.kpi-value {
+			font-size: 2.5rem;
+			font-weight: 800;
+			margin-top: 8px;
+			background: var(--primary-gradient);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		.chart-container {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 24px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			height: 400px;
+			position: relative;
+		}
+
+		.accordion {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 16px;
+			margin-bottom: 16px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			overflow: hidden;
+			transition: all 0.3s ease;
+		}
+
+		.accordion:hover {
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		}
+
+		.accordion-header {
+			background: rgba(102, 126, 234, 0.1);
+			padding: 20px 24px;
+			cursor: pointer;
+			font-weight: 700;
+			font-size: 18px;
+			color: #667eea;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			transition: all 0.3s ease;
+		}
+
+		.accordion-header:hover {
+			background: rgba(102, 126, 234, 0.15);
+		}
+
+		.accordion-content {
+			padding: 24px;
+			display: none;
+		}
+
+		.accordion.active .accordion-content {
+			display: block;
+		}
+
+		.accordion-icon {
+			transition: transform 0.3s ease;
+		}
+
+		.accordion.active .accordion-icon {
+			transform: rotate(180deg);
+		}
+
+		.radio-group {
+			display: flex;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.radio-option {
+			background: rgba(255, 255, 255, 0.9);
+			border: 2px solid rgba(102, 126, 234, 0.2);
+			border-radius: 12px;
+			padding: 12px 16px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.radio-option:hover {
+			border-color: #667eea;
+			background: rgba(102, 126, 234, 0.1);
+		}
+
+		.radio-option input[type="radio"] {
+			accent-color: #667eea;
+		}
+
+		.radio-option.selected {
+			background: var(--primary-gradient);
+			color: white;
+			border-color: #667eea;
+		}
+
+		.range-slider {
+			width: 100%;
+			height: 6px;
+			border-radius: 3px;
+			background: rgba(102, 126, 234, 0.2);
+			outline: none;
+			-webkit-appearance: none;
+		}
+
+		.range-slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background: var(--primary-gradient);
+			cursor: pointer;
+			box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+		}
+
+		.range-slider::-moz-range-thumb {
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background: var(--primary-gradient);
+			cursor: pointer;
+			border: none;
+			box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+		}
+
+		.table-container {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 20px;
+			overflow: hidden;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+		}
+
+		.table-container table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.table-container th {
+			background: rgba(102, 126, 234, 0.1);
+			padding: 16px 20px;
+			text-align: left;
+			font-weight: 700;
+			color: #667eea;
+		}
+
+		.table-container td {
+			padding: 16px 20px;
+			border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+		}
+
+		.table-container tr:hover {
+			background: rgba(102, 126, 234, 0.05);
+		}
+
+		.ai-analysis-box {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 24px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			min-height: 200px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.spinner {
+			border: 4px solid rgba(102, 126, 234, 0.1);
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			border-left-color: #667eea;
+			animation: spin 1s ease infinite;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		.floating-particles {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+		}
+
+		.particle {
+			position: absolute;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 50%;
+			animation: float 6s ease-in-out infinite;
+		}
+
+		@keyframes float {
+
+			0%,
+			100% {
+				transform: translateY(0px) rotate(0deg);
+			}
+
+			50% {
+				transform: translateY(-20px) rotate(180deg);
+			}
+		}
+
+		.hero-section {
+			text-align: center;
+			padding: 60px 20px;
+			background: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(20px);
+			border-radius: 0 0 30px 30px;
+			margin-bottom: 40px;
+		}
+
+		.hero-title {
+			font-size: 3.5rem;
+			font-weight: 900;
+			margin-bottom: 16px;
+			background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+
+		.hero-subtitle {
+			font-size: 1.2rem;
+			color: rgba(255, 255, 255, 0.9);
+			margin-bottom: 32px;
+		}
+
+		.main-container {
+			max-width: 1400px;
+			margin: 0 auto;
+			padding: 0 20px;
+		}
+
+		.grid-layout {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 30px;
+			margin-bottom: 40px;
+		}
+
+		@media (max-width: 1024px) {
+			.grid-layout {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.section-title {
+			font-size: 2rem;
+			font-weight: 800;
+			margin-bottom: 24px;
+			color: white;
+			text-align: center;
+		}
+
+		.profit {
+			color: #10b981;
+			font-weight: 700;
+		}
+
+		.loss {
+			color: #ef4444;
+			font-weight: 700;
+		}
+
+		.message-box {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			padding: 16px 24px;
+			border-radius: 12px;
+			color: white;
+			font-weight: 600;
+			z-index: 1000;
+			animation: slideIn 0.3s ease;
+		}
+
+		@keyframes slideIn {
+			from {
+				transform: translateX(100%);
+				opacity: 0;
+			}
+
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+
+		.message-success {
+			background: var(--success-gradient);
+		}
+
+		.message-error {
+			background: var(--danger-gradient);
+		}
+
+		.message-info {
+			background: var(--primary-gradient);
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Floating Particles Background -->
+	<div class="floating-particles" id="particles"></div>
+
+	<!-- Hero Section -->
+	<div class="hero-section">
+		<h1 class="hero-title">Interactive Condo Investment Dashboard</h1>
+		<p class="hero-subtitle">Analyze your real estate investment potential with AI-powered insights</p>
+	</div>
+
+	<div class="main-container">
+		<!-- Input Forms Grid -->
+		<div class="grid-layout">
+			<!-- Left Column -->
+			<div class="space-y-6">
+				<!-- Property Details -->
+				<div class="accordion active">
+					<div class="accordion-header">
+						<span>🏠 Property Details</span>
+						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd"
+								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+								clip-rule="evenodd" />
+						</svg>
+					</div>
+					<div class="accordion-content">
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-semibold mb-2">Condo Purchase Price ($)</label>
+								<input type="number" id="purchasePrice" class="input-field" value="740000" min="100000"
+									step="10000">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Pre-build Down Payment ($)</label>
+								<input type="number" id="prebuildDownPayment" class="input-field" value="148000" min="0"
+									step="1000">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Additional Deposit</label>
+								<div class="radio-group">
+									<label class="radio-option selected">
+										<input type="radio" name="additionalDeposit" value="0" checked>
+										<span>0%</span>
+									</label>
+									<label class="radio-option">
+										<input type="radio" name="additionalDeposit" value="0.05">
+										<span>5%</span>
+									</label>
+									<label class="radio-option">
+										<input type="radio" name="additionalDeposit" value="0.10">
+										<span>10%</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Rental Details -->
+				<div class="accordion active">
+					<div class="accordion-header">
+						<span>💰 Rental Details</span>
+						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd"
+								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+								clip-rule="evenodd" />
+						</svg>
+					</div>
+					<div class="accordion-content">
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-semibold mb-2">Rental Type</label>
+								<div class="radio-group">
+									<label class="radio-option selected">
+										<input type="radio" name="rentalType" value="longTerm" checked>
+										<span>Long-Term</span>
+									</label>
+									<label class="radio-option">
+										<input type="radio" name="rentalType" value="shortTerm">
+										<span>Short-Term</span>
+									</label>
+								</div>
+							</div>
+
+							<div id="longTermRentalInputs">
+								<div class="space-y-4">
+									<div>
+										<label class="block text-sm font-semibold mb-2">Monthly Rental Income
+											($)</label>
+										<input type="number" id="rentalIncome" class="input-field" value="3300" min="0"
+											step="100">
+									</div>
+									<div>
+										<label class="block text-sm font-semibold mb-2">Annual Vacancy Rate (%) <span
+												id="vacancyValue" class="text-sm text-gray-600">2.0%</span></label>
+										<input type="range" id="vacancyRate" class="range-slider" value="2" min="0"
+											max="10" step="0.1">
+									</div>
+								</div>
+							</div>
+
+							<div id="shortTermRentalInputs" class="hidden">
+								<div class="space-y-4">
+									<div>
+										<label class="block text-sm font-semibold mb-2">Short-Term Monthly Gross Income
+											($)</label>
+										<input type="number" id="shortTermRentalIncome" class="input-field" value="6000"
+											min="0" step="100">
+									</div>
+									<div>
+										<label class="block text-sm font-semibold mb-2">Short-Term Occupancy Rate (%)
+											<span id="shortTermOccupancyValue"
+												class="text-sm text-gray-600">60%</span></label>
+										<input type="range" id="shortTermOccupancyRate" class="range-slider" value="60"
+											min="0" max="100" step="1">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Column -->
+			<div class="space-y-6">
+				<!-- Financial & Cost Details -->
+				<div class="accordion active">
+					<div class="accordion-header">
+						<span>💳 Financial & Cost Details</span>
+						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd"
+								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+								clip-rule="evenodd" />
+						</svg>
+					</div>
+					<div class="accordion-content">
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-semibold mb-2">Mortgage Interest Rate</label>
+								<select id="interestRate" class="input-field">
+									<option value="3.99">3.99%</option>
+									<option value="4.09">4.09%</option>
+									<option value="4.25">4.25%</option>
+									<option value="4.5" selected>4.50%</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Annual Property Taxes ($)</label>
+								<input type="number" id="propertyTax" class="input-field" value="2950" min="0"
+									step="50">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Monthly Strata Fees ($)</label>
+								<input type="number" id="strataFees" class="input-field" value="461" min="0" step="10">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Realtor Fees (Purchase & Sale,
+									%)</label>
+								<input type="number" id="realtorFees" class="input-field" value="2" min="0" max="10"
+									step="0.1">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Property Transfer Tax (%) <span
+										id="pttValue" class="text-sm text-gray-600">1.75%</span></label>
+								<input type="range" id="propertyTransferTax" class="range-slider" value="1.75" min="0"
+									max="5" step="0.01">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Annual Maintenance/Repair (% of Annual
+									Gross Rent) <span id="maintenanceValue"
+										class="text-sm text-gray-600">8.0%</span></label>
+								<input type="range" id="maintenanceRate" class="range-slider" value="8" min="0" max="20"
+									step="0.5">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Investment Horizon -->
+				<div class="accordion active">
+					<div class="accordion-header">
+						<span>⏰ Investment Horizon</span>
+						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd"
+								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+								clip-rule="evenodd" />
+						</svg>
+					</div>
+					<div class="accordion-content">
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-semibold mb-2">Length of Hold (Years)</label>
+								<select id="holdLength" class="input-field">
+									<option value="2">2 Years</option>
+									<option value="5">5 Years</option>
+									<option value="10">10 Years</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2">Payment Frequency</label>
+								<div class="radio-group">
+									<label class="radio-option selected">
+										<input type="radio" name="paymentFrequency" value="monthly" checked>
+										<span>Monthly</span>
+									</label>
+									<label class="radio-option">
+										<input type="radio" name="paymentFrequency" value="weekly">
+										<span>Weekly (Accelerated)</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Sale Scenario -->
+				<div class="accordion active">
+					<div class="accordion-header">
+						<span>📈 Sale Scenario</span>
+						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd"
+								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+								clip-rule="evenodd" />
+						</svg>
+					</div>
+					<div class="accordion-content">
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-semibold mb-2">Expected Sale Price Change</label>
+								<div class="radio-group">
+									<label class="radio-option selected">
+										<input type="radio" name="saleScenario" value="-0.10" checked>
+										<span>10% Below Purchase</span>
+									</label>
+									<label class="radio-option">
+										<input type="radio" name="saleScenario" value="0">
+										<span>At Purchase Price</span>
+									</label>
+									<label class="radio-option">
+										<input type="radio" name="saleScenario" value="0.10">
+										<span>10% Above Purchase</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Reset Button -->
+		<div class="text-center mb-8">
+			<button id="resetBtn" class="btn-secondary">🔄 Reset All Parameters</button>
+		</div>
+
+		<!-- Results Section -->
+		<div id="results">
+			<h2 class="section-title">Investment Summary</h2>
+
+			<!-- KPI Cards -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+				<div class="kpi-card glass-card-hover">
+					<div class="text-lg font-semibold text-gray-600">Net Profit/Loss</div>
+					<div id="kpiNetProfitLoss" class="kpi-value"></div>
+				</div>
+				<div class="kpi-card glass-card-hover">
+					<div class="text-lg font-semibold text-gray-600">Total Initial Outlay</div>
+					<div id="kpiInitialOutlay" class="kpi-value"></div>
+				</div>
+				<div class="kpi-card glass-card-hover">
+					<div class="text-lg font-semibold text-gray-600">Total Net Rental Income</div>
+					<div id="kpiNetRentalIncome" class="kpi-value"></div>
+				</div>
+			</div>
+
+			<!-- Summary Table -->
+			<div id="summaryTableContainer" class="table-container mb-8"></div>
+
+			<!-- Charts Grid -->
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+				<div>
+					<h3 class="text-xl font-bold text-white mb-4 text-center">Initial Capital Allocation</h3>
+					<div class="chart-container">
+						<canvas id="initialOutlayChart"></canvas>
+					</div>
+				</div>
+				<div>
+					<h3 class="text-xl font-bold text-white mb-4 text-center">Net Profit/Loss by Sale Scenario</h3>
+					<div class="chart-container">
+						<canvas id="profitLossChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+			<!-- AI Analysis -->
+			<h2 class="section-title">AI Investment Analysis</h2>
+			<div class="ai-analysis-box" id="aiAnalysisBox">
+				<div class="spinner hidden" id="aiSpinner"></div>
+				<p id="aiAnalysisText" class="text-center text-gray-500">Loading AI analysis...</p>
+			</div>
+
+			<!-- Detailed Breakdown -->
+			<h2 class="section-title mt-12">Detailed Breakdown</h2>
+			<div id="breakdownTableContainer" class="table-container"></div>
+		</div>
+	</div>
+
+	<script>
+		'use strict';
+
+		// Global chart instances
+		let initialOutlayChartInstance;
+		let profitLossChartInstance;
+
+		// Create floating particles background
+		function createParticles() {
+			const particlesContainer = document.getElementById('particles');
+			for (let i = 0; i < 50; i++) {
+				const particle = document.createElement('div');
+				particle.className = 'particle';
+				particle.style.left = Math.random() * 100 + '%';
+				particle.style.top = Math.random() * 100 + '%';
+				particle.style.width = Math.random() * 6 + 2 + 'px';
+				particle.style.height = particle.style.width;
+				particle.style.animationDelay = Math.random() * 6 + 's';
+				particle.style.animationDuration = Math.random() * 3 + 3 + 's';
+				particlesContainer.appendChild(particle);
+			}
+		}
+
+		// Accordion functionality
+		function initAccordions() {
+			const accordions = document.querySelectorAll('.accordion');
+			accordions.forEach(accordion => {
+				const header = accordion.querySelector('.accordion-header');
+				header.addEventListener('click', () => {
+					accordion.classList.toggle('active');
+				});
+			});
+		}
+
+		// Radio button styling
+		function initRadioButtons() {
+			const radioGroups = document.querySelectorAll('.radio-group');
+			radioGroups.forEach(group => {
+				const options = group.querySelectorAll('.radio-option');
+				options.forEach(option => {
+					const radio = option.querySelector('input[type="radio"]');
+					if (radio.checked) {
+						option.classList.add('selected');
+					}
+
+					radio.addEventListener('change', () => {
+						options.forEach(opt => opt.classList.remove('selected'));
+						option.classList.add('selected');
+					});
+				});
+			});
+		}
+
+		// Helper function to format currency
+		function formatCurrency(value) {
+			return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(value);
+		}
+
+		// Core Mortgage Amortization Calculation Function
+		function calculateAmortizationDetails(principal, annualRate, paymentFrequency, holdYears) {
+			let balance = principal;
+			let totalInterestPaid = 0;
+			let standardMonthlyPayment;
+			let effectivePaymentAmount;
+			let paymentsPerYear;
+			let periodicRate;
+
+			const standardAmortizationYears = 25;
+
+			const monthlyRate = annualRate / 12 / 100;
+			const totalMonthlyPayments = standardAmortizationYears * 12;
+
+			if (monthlyRate === 0) {
+				standardMonthlyPayment = principal / totalMonthlyPayments;
+			} else {
+				standardMonthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonthlyPayments)) / (Math.pow(1 + monthlyRate, totalMonthlyPayments) - 1);
+			}
+
+			if (paymentFrequency === 'monthly') {
+				effectivePaymentAmount = standardMonthlyPayment;
+				paymentsPerYear = 12;
+				periodicRate = annualRate / 12 / 100;
+			} else {
+				effectivePaymentAmount = standardMonthlyPayment / 4;
+				paymentsPerYear = 52;
+				periodicRate = annualRate / paymentsPerYear / 100;
+			}
+
+			const totalPaymentsInHold = holdYears * paymentsPerYear;
+
+			for (let i = 0; i < totalPaymentsInHold; i++) {
+				if (balance <= 0) {
+					balance = 0;
+					break;
+				}
+				let interestPortion = balance * periodicRate;
+				let principalPortion = effectivePaymentAmount - interestPortion;
+
+				if (principalPortion < 0) {
+					principalPortion = 0;
+				}
+
+				balance -= principalPortion;
+				totalInterestPaid += interestPortion;
+			}
+
+			return {
+				remainingBalance: Math.max(0, balance),
+				totalInterestPaid: totalInterestPaid,
+				standardMonthlyPayment: standardMonthlyPayment,
+				effectivePaymentAmount: effectivePaymentAmount,
+				paymentsPerYear: paymentsPerYear
+			};
+		}
+
+		// Chart Functions
+		function createInitialOutlayChart(data) {
+			const ctx = document.getElementById('initialOutlayChart').getContext('2d');
+
+			if (initialOutlayChartInstance) {
+				initialOutlayChartInstance.destroy();
+			}
+
+			initialOutlayChartInstance = new Chart(ctx, {
+				type: 'doughnut',
+				data: {
+					labels: ['Pre-build Down Payment', 'Additional Deposit', 'Property Transfer Tax', 'Purchase Realtor Fees'],
+					datasets: [{
+						data: data,
+						backgroundColor: [
+							'#667eea',
+							'#764ba2',
+							'#f093fb',
+							'#f5576c'
+						],
+						borderWidth: 0,
+						hoverOffset: 8
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								font: {
+									size: 14,
+									weight: 'bold',
+									family: 'Inter'
+								},
+								color: '#1f2937',
+								usePointStyle: true,
+								padding: 20
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function (context) {
+									let label = context.label || '';
+									if (label) {
+										label += ': ';
+									}
+									if (context.parsed !== null) {
+										label += formatCurrency(context.parsed);
+									}
+									return label;
+								}
+							},
+							bodyFont: {
+								size: 14,
+								family: 'Inter'
+							},
+							padding: 12,
+							backgroundColor: 'rgba(255, 255, 255, 0.95)',
+							titleColor: '#1a202c',
+							bodyColor: '#1a202c',
+							borderColor: 'rgba(102, 126, 234, 0.2)',
+							borderWidth: 1
+						}
+					}
+				}
+			});
+		}
+
+		function createProfitLossChart(labels, data) {
+			const ctx = document.getElementById('profitLossChart').getContext('2d');
+
+			if (profitLossChartInstance) {
+				profitLossChartInstance.destroy();
+			}
+
+			profitLossChartInstance = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'Net Profit/Loss',
+						data: data,
+						backgroundColor: data.map(value => value >= 0 ? '#10b981' : '#ef4444'),
+						borderColor: data.map(value => value >= 0 ? '#059669' : '#dc2626'),
+						borderWidth: 2,
+						borderRadius: 8,
+						borderSkipped: false
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							display: false,
+						},
+						tooltip: {
+							callbacks: {
+								label: function (context) {
+									let label = context.dataset.label || '';
+									if (label) {
+										label += ': ';
+									}
+									if (context.parsed.y !== null) {
+										label += formatCurrency(context.parsed.y);
+									}
+									return label;
+								}
+							},
+							bodyFont: {
+								size: 14,
+								family: 'Inter'
+							},
+							padding: 12,
+							backgroundColor: 'rgba(255, 255, 255, 0.95)',
+							titleColor: '#1a202c',
+							bodyColor: '#1a202c',
+							borderColor: 'rgba(102, 126, 234, 0.2)',
+							borderWidth: 1
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							title: {
+								display: true,
+								text: 'Amount (CAD)',
+								font: {
+									size: 14,
+									weight: 'bold',
+									family: 'Inter'
+								},
+								color: '#ffffff'
+							},
+							ticks: {
+								callback: function (value, index, values) {
+									return formatCurrency(value);
+								},
+								font: {
+									size: 12,
+									family: 'Inter'
+								},
+								color: '#1f2937'
+							},
+							grid: {
+								color: 'rgba(255, 255, 255, 0.1)'
+							}
+						},
+						x: {
+							grid: {
+								display: false
+							},
+							ticks: {
+								font: {
+									size: 12,
+									family: 'Inter'
+								},
+								color: '#1f2937'
+							}
+						}
+					}
+				}
+			});
+		}
+
+		// Mock AI Analysis Function
+		function generateMockAnalysis(data) {
+			const isProfitable = data.currentNetProfitLoss > 0;
+			const profitPercentage = Math.abs(data.currentNetProfitLoss / data.totalInitialCashOutlay * 100);
+
+			let analysis = `📊 **Investment Analysis Summary**\n\n`;
+
+			if (isProfitable) {
+				analysis += `✅ **POSITIVE OUTCOME**: This investment shows a profit of ${formatCurrency(data.currentNetProfitLoss)} over ${data.holdLengthYears} years.\n\n`;
+				analysis += `💰 **Return on Investment**: ${profitPercentage.toFixed(1)}% return on your initial outlay of ${formatCurrency(data.totalInitialCashOutlay)}.\n\n`;
+			} else {
+				analysis += `⚠️ **NEGATIVE OUTCOME**: This investment shows a loss of ${formatCurrency(Math.abs(data.currentNetProfitLoss))} over ${data.holdLengthYears} years.\n\n`;
+				analysis += `📉 **Loss Percentage**: ${profitPercentage.toFixed(1)}% loss on your initial outlay of ${formatCurrency(data.totalInitialCashOutlay)}.\n\n`;
+			}
+
+			analysis += `🏠 **Key Factors**:\n`;
+			analysis += `• Purchase Price: ${formatCurrency(data.purchasePrice)}\n`;
+			analysis += `• Mortgage Amount: ${formatCurrency(data.mortgageAmount)} at ${data.interestRate}%\n`;
+			analysis += `• Rental Income: ${formatCurrency(data.rentalIncomePerMonth)}/month (${data.rentalType === 'longTerm' ? 'Long-term' : 'Short-term'})\n`;
+			analysis += `• Sale Scenario: ${data.currentSaleScenarioLabel}\n\n`;
+
+			if (isProfitable) {
+				analysis += `🎯 **Recommendation**: This appears to be a viable investment with positive cash flow and potential for appreciation. Consider market conditions and your risk tolerance.`;
+			} else {
+				analysis += `🎯 **Recommendation**: This investment currently shows negative returns. Consider negotiating a lower purchase price, increasing rental income, or exploring different market conditions.`;
+			}
+
+			return analysis;
+		}
+
+		// AI Analysis Function
+		async function getAiAnalysis(data) {
+			const aiAnalysisBox = document.getElementById('aiAnalysisBox');
+			const aiSpinner = document.getElementById('aiSpinner');
+			const aiAnalysisText = document.getElementById('aiAnalysisText');
+
+			if (!aiAnalysisBox || !aiSpinner || !aiAnalysisText) {
+				console.error('AI analysis elements not found');
+				return;
+			}
+
+			aiAnalysisText.textContent = '';
+			aiAnalysisText.classList.add('hidden');
+			aiSpinner.classList.remove('hidden');
+			aiAnalysisBox.classList.add('justify-center', 'items-center');
+
+			const prompt = `Analyze the following condo investment scenario and provide a concise summary of its potential profitability, key risks, and benefits. Focus on the financial outcome, especially the Net Profit/Loss.
+
+            Investment Data:
+            - Purchase Price: ${formatCurrency(data.purchasePrice)}
+            - Initial Outlay: ${formatCurrency(data.totalInitialCashOutlay)}
+            - Mortgage Amount: ${formatCurrency(data.mortgageAmount)}
+            - Interest Rate: ${data.interestRate}%
+            - Holding Period: ${data.holdLengthYears} years
+            - Rental Type: ${data.rentalType}
+            - Monthly Gross Rental Income: ${formatCurrency(data.rentalIncomePerMonth)}
+            - Vacancy/Occupancy Rate: ${data.rentalType === 'longTerm' ? (data.actualVacancyRate * 100).toFixed(1) + '% Vacancy' : ((1 - data.actualVacancyRate) * 100).toFixed(0) + '% Occupancy'}
+            - Total Net Rental Income over hold period: ${formatCurrency(data.totalNetRentalIncome)}
+            - Total Interest Paid over hold period: ${formatCurrency(data.totalInterestPaid)}
+            - Current Sale Scenario: ${data.currentSaleScenarioLabel}
+            - Estimated Sale Price: ${formatCurrency(data.currentSalePrice)}
+            - Net Profit/Loss: ${formatCurrency(data.currentNetProfitLoss)}
+
+            Based on these figures, provide a summary.`;
+
+			try {
+				// Check if API key is available
+				const apiKey = window.API_CONFIG ? window.API_CONFIG.GEMINI_API_KEY : "";
+
+				if (!apiKey || apiKey === "YOUR_ACTUAL_API_KEY_HERE") {
+					// Provide mock AI analysis when API key is not available
+					const mockAnalysis = generateMockAnalysis(data);
+					aiAnalysisText.textContent = mockAnalysis;
+					aiAnalysisText.classList.remove('hidden');
+					aiAnalysisBox.classList.remove('justify-center', 'items-center');
+					return;
+				}
+
+				let chatHistory = [];
+				chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+				const payload = { contents: chatHistory };
+				const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+				const response = await fetch(apiUrl, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(payload)
+				});
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
+				const result = await response.json();
+				if (result.candidates && result.candidates.length > 0 &&
+					result.candidates[0].content && result.candidates[0].content.parts &&
+					result.candidates[0].content.parts.length > 0) {
+					const text = result.candidates[0].content.parts[0].text;
+					aiAnalysisText.textContent = text;
+					aiAnalysisText.classList.remove('hidden');
+					aiAnalysisBox.classList.remove('justify-center', 'items-center');
+				} else {
+					aiAnalysisText.textContent = "AI analysis could not be generated. Please try again.";
+					aiAnalysisText.classList.remove('hidden');
+					aiAnalysisBox.classList.add('justify-center', 'items-center');
+				}
+			} catch (error) {
+				console.error("Error fetching AI analysis:", error);
+				aiAnalysisText.textContent = "Error generating AI analysis. Please check your network connection or try again later.";
+				aiAnalysisText.classList.remove('hidden');
+				aiAnalysisBox.classList.add('justify-center', 'items-center');
+			} finally {
+				aiSpinner.classList.add('hidden');
+			}
+		}
+
+		// Main Calculation and Display Function
+		function calculateProfitability() {
+			try {
+				// Get Input Values
+				const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+				const prebuildDownPayment = parseFloat(document.getElementById('prebuildDownPayment').value);
+				const additionalDepositRate = parseFloat(document.querySelector('input[name="additionalDeposit"]:checked').value);
+				const interestRate = parseFloat(document.getElementById('interestRate').value);
+				const annualPropertyTax = parseFloat(document.getElementById('propertyTax').value);
+				const monthlyStrataFees = parseFloat(document.getElementById('strataFees').value);
+				const realtorFeesRate = parseFloat(document.getElementById('realtorFees').value) / 100;
+				const propertyTransferTaxRate = parseFloat(document.getElementById('propertyTransferTax').value) / 100;
+				const holdLengthYears = parseInt(document.getElementById('holdLength').value);
+				const paymentFrequency = document.querySelector('input[name="paymentFrequency"]:checked').value;
+				const maintenanceRate = parseFloat(document.getElementById('maintenanceRate').value) / 100;
+				const rentalType = document.querySelector('input[name="rentalType"]:checked').value;
+
+				let rentalIncomePerMonth;
+				let actualVacancyRate;
+				let currentSaleScenarioLabel;
+
+				if (rentalType === 'longTerm') {
+					rentalIncomePerMonth = parseFloat(document.getElementById('rentalIncome').value);
+					actualVacancyRate = parseFloat(document.getElementById('vacancyRate').value) / 100;
+				} else {
+					rentalIncomePerMonth = parseFloat(document.getElementById('shortTermRentalIncome').value);
+					const shortTermOccupancyRate = parseFloat(document.getElementById('shortTermOccupancyRate').value) / 100;
+					actualVacancyRate = (1 - shortTermOccupancyRate);
+				}
+
+				// Basic Input Validation
+				if (isNaN(purchasePrice) || isNaN(prebuildDownPayment) || isNaN(interestRate) || isNaN(rentalIncomePerMonth) ||
+					isNaN(annualPropertyTax) || isNaN(monthlyStrataFees) || isNaN(realtorFeesRate) || isNaN(propertyTransferTaxRate) ||
+					isNaN(holdLengthYears) || isNaN(maintenanceRate) || isNaN(actualVacancyRate) ||
+					purchasePrice <= 0 || prebuildDownPayment < 0) {
+					displayMessage('Please enter valid numerical values for all fields.', 'error');
+					return;
+				}
+
+				// Calculate Derived Values
+				const additionalDepositAmount = purchasePrice * additionalDepositRate;
+				const totalDownPayment = prebuildDownPayment + additionalDepositAmount;
+				const mortgageAmount = purchasePrice - totalDownPayment;
+
+				if (mortgageAmount < 0) {
+					displayMessage('Total down payment exceeds purchase price. Please adjust down payment or purchase price.', 'error');
+					return;
+				}
+
+				const initialPurchaseRealtorFees = purchasePrice * realtorFeesRate;
+				const propertyTransferTaxAmount = purchasePrice * propertyTransferTaxRate;
+				const totalInitialCashOutlay = totalDownPayment + initialPurchaseRealtorFees + propertyTransferTaxAmount;
+
+				const holdLengthMonths = holdLengthYears * 12;
+
+				// Mortgage Amortization Details
+				const { remainingBalance, totalInterestPaid, standardMonthlyPayment, effectivePaymentAmount } =
+					calculateAmortizationDetails(mortgageAmount, interestRate, paymentFrequency, holdLengthYears);
+
+				// Calculate Income and Expenses
+				const totalGrossRentalIncome = rentalIncomePerMonth * holdLengthMonths;
+				const totalVacancyLoss = totalGrossRentalIncome * actualVacancyRate;
+				const totalNetRentalIncome = totalGrossRentalIncome - totalVacancyLoss;
+
+				const totalPropertyTaxesPaid = annualPropertyTax * holdLengthYears;
+				const totalStrataFeesPaid = monthlyStrataFees * holdLengthMonths;
+				const totalMaintenanceCost = (rentalIncomePerMonth * 12 * maintenanceRate) * holdLengthYears;
+
+				// Sale Scenario Calculations
+				const saleScenarios = [
+					{ label: '10% Below Purchase', factor: -0.10 },
+					{ label: 'At Purchase Price', factor: 0 },
+					{ label: '10% Above Purchase', factor: 0.10 }
+				];
+
+				const profitLossResults = [];
+				const profitLossLabels = [];
+
+				saleScenarios.forEach(scenario => {
+					const salePrice = purchasePrice * (1 + scenario.factor);
+					const saleRealtorFees = salePrice * realtorFeesRate;
+
+					const totalRevenue = salePrice + totalNetRentalIncome;
+					const totalCosts = totalInitialCashOutlay + totalInterestPaid + totalPropertyTaxesPaid + totalStrataFeesPaid + totalMaintenanceCost + saleRealtorFees;
+					const netProfitLoss = totalRevenue - totalCosts - remainingBalance;
+
+					profitLossResults.push(netProfitLoss);
+					profitLossLabels.push(scenario.label);
+				});
+
+				// Get current sale scenario
+				const currentSaleScenarioRadio = document.querySelector('input[name="saleScenario"]:checked');
+				const currentSaleScenarioFactor = parseFloat(currentSaleScenarioRadio.value);
+				currentSaleScenarioLabel = currentSaleScenarioRadio.parentNode.querySelector('span').textContent;
+
+				const currentSalePrice = purchasePrice * (1 + currentSaleScenarioFactor);
+				const currentSaleRealtorFees = currentSalePrice * realtorFeesRate;
+				const currentTotalRevenue = currentSalePrice + totalNetRentalIncome;
+				const currentTotalCosts = totalInitialCashOutlay + totalInterestPaid + totalPropertyTaxesPaid + totalStrataFeesPaid + totalMaintenanceCost + currentSaleRealtorFees;
+				const currentNetProfitLoss = currentTotalRevenue - currentTotalCosts - remainingBalance;
+
+				// Display Results
+				const summaryTableContainer = document.getElementById('summaryTableContainer');
+				const breakdownTableContainer = document.getElementById('breakdownTableContainer');
+
+				// Update KPI Cards
+				const netProfitLossElement = document.getElementById('kpiNetProfitLoss');
+				netProfitLossElement.textContent = formatCurrency(currentNetProfitLoss);
+
+				// Apply conditional gradient color based on value
+				if (currentNetProfitLoss < 0) {
+					// Negative values: red gradient
+					netProfitLossElement.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+					netProfitLossElement.style.webkitBackgroundClip = 'text';
+					netProfitLossElement.style.webkitTextFillColor = 'transparent';
+					netProfitLossElement.style.backgroundClip = 'text';
+				} else if (currentNetProfitLoss > 0) {
+					// Positive values: strong green gradient
+					netProfitLossElement.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+					netProfitLossElement.style.webkitBackgroundClip = 'text';
+					netProfitLossElement.style.webkitTextFillColor = 'transparent';
+					netProfitLossElement.style.backgroundClip = 'text';
+				} else {
+					// Zero values: neutral gray
+					netProfitLossElement.style.background = 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)';
+					netProfitLossElement.style.webkitBackgroundClip = 'text';
+					netProfitLossElement.style.webkitTextFillColor = 'transparent';
+					netProfitLossElement.style.backgroundClip = 'text';
+				}
+
+				document.getElementById('kpiInitialOutlay').textContent = formatCurrency(totalInitialCashOutlay);
+				document.getElementById('kpiNetRentalIncome').textContent = formatCurrency(totalNetRentalIncome);
+
+				// Summary Table
+				let summaryHtml = `
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-left">Metric</th>
+                                <th class="py-3 px-4 text-left">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="font-bold bg-gray-50"><td colspan="2">Selected Scenario Inputs</td></tr>
+                            <tr><td>Initial Down Payment</td><td>${formatCurrency(totalDownPayment)}</td></tr>
+                            <tr><td>Mortgage Amount</td><td>${formatCurrency(mortgageAmount)}</td></tr>
+                            <tr><td>Estimated Monthly Mortgage Payment (P&I)</td><td>${formatCurrency(standardMonthlyPayment)}</td></tr>
+                            <tr><td>Actual Payment Frequency</td><td>${paymentFrequency.charAt(0).toUpperCase() + paymentFrequency.slice(1)} (${formatCurrency(effectivePaymentAmount)} per ${paymentFrequency === 'monthly' ? 'month' : 'week'})</td></tr>
+                            <tr><td>Length of Hold</td><td>${holdLengthYears} Years</td></tr>
+                            <tr><td>Rental Type</td><td>${rentalType === 'longTerm' ? 'Long-Term' : 'Short-Term'}</td></tr>
+                            <tr><td>${rentalType === 'longTerm' ? 'Monthly Rental Income' : 'Short-Term Monthly Gross Income'}</td><td>${formatCurrency(rentalIncomePerMonth)}</td></tr>
+                            <tr><td>${rentalType === 'longTerm' ? 'Annual Vacancy Rate' : 'Short-Term Occupancy Rate'}</td><td>${(rentalType === 'longTerm' ? actualVacancyRate : (1 - actualVacancyRate)) * 100}%</td></tr>
+                            <tr><td>Current Sale Scenario</td><td>${currentSaleScenarioLabel}</td></tr>
+                            <tr><td>Estimated Sale Price (Current Scenario)</td><td>${formatCurrency(currentSalePrice)}</td></tr>
+                        </tbody>
+                    </table>
+                `;
+				summaryTableContainer.innerHTML = summaryHtml;
+
+				// Breakdown Table
+				let breakdownHtml = `
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-left">Category</th>
+                                <th class="py-3 px-4 text-left">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="font-bold bg-gray-50"><td>Total Initial Outlay</td><td>${formatCurrency(totalInitialCashOutlay)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Pre-build Down Payment</td><td>${formatCurrency(prebuildDownPayment)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Additional Deposit</td><td>${formatCurrency(additionalDepositAmount)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Purchase Realtor Fees (${(realtorFeesRate * 100).toFixed(1)}%)</td><td>${formatCurrency(initialPurchaseRealtorFees)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Property Transfer Tax (${(propertyTransferTaxRate * 100).toFixed(2)}%)</td><td>${formatCurrency(propertyTransferTaxAmount)}</td></tr>
+
+                            <tr class="font-bold bg-gray-50"><td>Total Rental Income (Net of Vacancy)</td><td>${formatCurrency(totalNetRentalIncome)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Gross Rental Income</td><td>${formatCurrency(totalGrossRentalIncome)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Vacancy Loss (${(actualVacancyRate * 100).toFixed(1)}%)</td><td>${formatCurrency(totalVacancyLoss)}</td></tr>
+
+                            <tr class="font-bold bg-gray-50"><td>Total Operating Expenses</td><td>${formatCurrency(totalPropertyTaxesPaid + totalStrataFeesPaid + totalMaintenanceCost)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Property Taxes Paid</td><td>${formatCurrency(totalPropertyTaxesPaid)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Strata Fees Paid</td><td>${formatCurrency(totalStrataFeesPaid)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Maintenance/Repair Costs (${(maintenanceRate * 100).toFixed(1)}% of Annual Gross Rent)</td><td>${formatCurrency(totalMaintenanceCost)}</td></tr>
+
+                            <tr class="font-bold bg-gray-50"><td>Mortgage Related Costs & Balances</td><td></td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Total Interest Paid on Mortgage</td><td>${formatCurrency(totalInterestPaid)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Remaining Mortgage Balance at Sale</td><td>${formatCurrency(remainingBalance)}</td></tr>
+
+                            <tr class="font-bold bg-gray-50"><td>Sale Proceeds & Costs (Current Scenario)</td><td></td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Estimated Sale Price</td><td>${formatCurrency(currentSalePrice)}</td></tr>
+                            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Sale Realtor Fees (${(realtorFeesRate * 100).toFixed(1)}%)</td><td>${formatCurrency(currentSaleRealtorFees)}</td></tr>
+
+                            <tr class="font-bold text-lg ${currentNetProfitLoss >= 0 ? 'profit' : 'loss'}">
+                                <td>Net Profit/Loss After ${holdLengthYears} Years</td>
+                                <td>${formatCurrency(currentNetProfitLoss)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+				breakdownTableContainer.innerHTML = breakdownHtml;
+
+				// Update Charts
+				createInitialOutlayChart([
+					prebuildDownPayment,
+					additionalDepositAmount,
+					propertyTransferTaxAmount,
+					initialPurchaseRealtorFees
+				]);
+
+				createProfitLossChart(profitLossLabels, profitLossResults);
+
+				// Trigger AI Analysis
+				getAiAnalysis({
+					purchasePrice,
+					totalInitialCashOutlay,
+					mortgageAmount,
+					interestRate,
+					holdLengthYears,
+					rentalType,
+					rentalIncomePerMonth,
+					actualVacancyRate,
+					totalNetRentalIncome,
+					totalInterestPaid,
+					currentSaleScenarioLabel,
+					currentSalePrice,
+					currentNetProfitLoss
+				});
+			} catch (error) {
+				console.error('Error in calculateProfitability:', error);
+				displayMessage('An error occurred while calculating. Please check your inputs and try again.', 'error');
+			}
+		}
+
+		// Message Box Function
+		function displayMessage(message, type = 'info') {
+			const messageBox = document.createElement('div');
+			messageBox.className = `message-box message-${type}`;
+			messageBox.textContent = message;
+			document.body.appendChild(messageBox);
+
+			setTimeout(() => {
+				messageBox.remove();
+			}, 5000);
+		}
+
+		// Toggle Rental Type Inputs
+		function toggleRentalInputs() {
+			const rentalType = document.querySelector('input[name="rentalType"]:checked').value;
+			if (rentalType === 'longTerm') {
+				document.getElementById('longTermRentalInputs').classList.remove('hidden');
+				document.getElementById('shortTermRentalInputs').classList.add('hidden');
+			} else {
+				document.getElementById('longTermRentalInputs').classList.add('hidden');
+				document.getElementById('shortTermRentalInputs').classList.remove('hidden');
+			}
+			calculateProfitability();
+		}
+
+		// Reset Function
+		function resetCalculator() {
+			document.getElementById('purchasePrice').value = "740000";
+			document.getElementById('prebuildDownPayment').value = "148000";
+			document.querySelector('input[name="additionalDeposit"][value="0"]').checked = true;
+
+			document.querySelector('input[name="rentalType"][value="longTerm"]').checked = true;
+			document.getElementById('rentalIncome').value = "3300";
+			document.getElementById('vacancyRate').value = "2";
+			document.getElementById('shortTermRentalIncome').value = "6000";
+			document.getElementById('shortTermOccupancyRate').value = "60";
+			toggleRentalInputs();
+
+			document.getElementById('interestRate').value = "4.5";
+			document.getElementById('propertyTax').value = "2950";
+			document.getElementById('strataFees').value = "461";
+			document.getElementById('realtorFees').value = "2";
+			document.getElementById('propertyTransferTax').value = "1.75";
+			document.getElementById('holdLength').value = "2";
+			document.querySelector('input[name="paymentFrequency"][value="monthly"]').checked = true;
+			document.querySelector('input[name="saleScenario"][value="-0.10"]').checked = true;
+			document.getElementById('maintenanceRate').value = "8";
+
+			// Update slider displays
+			document.getElementById('pttValue').textContent = `1.75%`;
+			document.getElementById('maintenanceValue').textContent = `8.0%`;
+			document.getElementById('vacancyValue').textContent = `2.0%`;
+			document.getElementById('shortTermOccupancyValue').textContent = `60%`;
+
+			// Update radio button styling
+			initRadioButtons();
+
+			calculateProfitability();
+		}
+
+		// Event Listeners
+		document.addEventListener('DOMContentLoaded', () => {
+			// Initialize UI components
+			createParticles();
+			initAccordions();
+			initRadioButtons();
+
+			// Update slider value displays
+			document.getElementById('propertyTransferTax').addEventListener('input', (event) => {
+				document.getElementById('pttValue').textContent = `${parseFloat(event.target.value).toFixed(2)}%`;
+			});
+			document.getElementById('maintenanceRate').addEventListener('input', (event) => {
+				document.getElementById('maintenanceValue').textContent = `${parseFloat(event.target.value).toFixed(1)}%`;
+			});
+			document.getElementById('vacancyRate').addEventListener('input', (event) => {
+				document.getElementById('vacancyValue').textContent = `${parseFloat(event.target.value).toFixed(1)}%`;
+			});
+			document.getElementById('shortTermOccupancyRate').addEventListener('input', (event) => {
+				document.getElementById('shortTermOccupancyValue').textContent = `${parseFloat(event.target.value).toFixed(0)}%`;
+			});
+
+			// Recalculate on any input change
+			const inputs = document.querySelectorAll('input, select');
+			inputs.forEach(input => {
+				if (input.type === 'range' || input.type === 'text' || input.type === 'number') {
+					input.addEventListener('input', calculateProfitability);
+				} else {
+					input.addEventListener('change', calculateProfitability);
+				}
+			});
+
+			// Rental type toggle listener
+			document.querySelectorAll('input[name="rentalType"]').forEach(radio => {
+				radio.addEventListener('change', toggleRentalInputs);
+			});
+
+			// Reset button click
+			document.getElementById('resetBtn').addEventListener('click', resetCalculator);
+
+			// Initial setup
+			toggleRentalInputs();
+			calculateProfitability();
+		});
+	</script>
+</body>
+
+</html>
