@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Interactive Condo Investment Dashboard with AI Analysis</title>
+	<title>Interactive Investment Dashboard</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -14,13 +14,68 @@
 		rel="stylesheet">
 	<style>
 		:root {
-			--primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			--secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-			--success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-			--warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-			--danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-			--glass-bg: rgba(255, 255, 255, 0.1);
-			--glass-border: rgba(255, 255, 255, 0.2);
+			/* Professional Color Palette */
+			--primary-blue: #2563eb;
+			--primary-blue-dark: #1d4ed8;
+			--primary-blue-light: #3b82f6;
+			--secondary-gray: #64748b;
+			--accent-green: #059669;
+			--accent-red: #dc2626;
+			--accent-yellow: #d97706;
+			--accent-purple: #7c3aed;
+
+			/* Neutral Grays */
+			--gray-50: #f8fafc;
+			--gray-100: #f1f5f9;
+			--gray-200: #e2e8f0;
+			--gray-300: #cbd5e1;
+			--gray-400: #94a3b8;
+			--gray-500: #64748b;
+			--gray-600: #475569;
+			--gray-700: #334155;
+			--gray-800: #1e293b;
+			--gray-900: #0f172a;
+
+			/* Gradients */
+			--primary-gradient: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+			--secondary-gradient: linear-gradient(135deg, var(--secondary-gray) 0%, var(--gray-600) 100%);
+			--success-gradient: linear-gradient(135deg, var(--accent-green) 0%, #047857 100%);
+			--warning-gradient: linear-gradient(135deg, var(--accent-yellow) 0%, #b45309 100%);
+			--danger-gradient: linear-gradient(135deg, var(--accent-red) 0%, #b91c1c 100%);
+			--elegant-gradient: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-purple) 100%);
+
+			/* Glass Effects */
+			--glass-bg: rgba(255, 255, 255, 0.08);
+			--glass-border: rgba(255, 255, 255, 0.12);
+			--glass-bg-dark: rgba(15, 23, 42, 0.8);
+			--glass-border-dark: rgba(255, 255, 255, 0.1);
+
+			/* Shadows */
+			--subtle-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+			--medium-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+			--deep-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+			--xl-shadow: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+
+			/* Typography */
+			--font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			--font-size-xs: 0.75rem;
+			--font-size-sm: 0.875rem;
+			--font-size-base: 1rem;
+			--font-size-lg: 1.125rem;
+			--font-size-xl: 1.25rem;
+			--font-size-2xl: 1.5rem;
+			--font-size-3xl: 1.875rem;
+			--font-size-4xl: 2.25rem;
+
+			/* Spacing */
+			--spacing-1: 0.25rem;
+			--spacing-2: 0.5rem;
+			--spacing-3: 0.75rem;
+			--spacing-4: 1rem;
+			--spacing-6: 1.5rem;
+			--spacing-8: 2rem;
+			--spacing-12: 3rem;
+			--spacing-16: 4rem;
 		}
 
 		* {
@@ -30,19 +85,63 @@
 		}
 
 		body {
-			font-family: 'Inter', sans-serif;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			font-family: var(--font-family);
+			background: var(--elegant-gradient);
 			min-height: 100vh;
-			color: #1a202c;
+			color: var(--gray-900);
 			overflow-x: hidden;
+			position: relative;
+			font-size: var(--font-size-base);
+			line-height: 1.6;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		body::before {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background:
+				radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+				radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+				radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+			pointer-events: none;
+			z-index: -1;
 		}
 
 		.glass-card {
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			border-radius: 20px;
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			border: 1px solid var(--glass-border);
+			border-radius: 16px;
+			box-shadow: var(--medium-shadow);
+			position: relative;
+			overflow: hidden;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.glass-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 2px;
+			background: var(--primary-gradient);
+			transform: scaleX(0);
+			transition: transform 0.3s ease;
+		}
+
+		.glass-card:hover {
+			box-shadow: var(--deep-shadow);
+			transform: translateY(-2px);
+		}
+
+		.glass-card:hover::before {
+			transform: scaleX(1);
 		}
 
 		.glass-card-hover {
@@ -66,65 +165,145 @@
 			border: none;
 			color: white;
 			padding: 12px 24px;
-			border-radius: 12px;
+			border-radius: 8px;
 			font-weight: 600;
+			font-size: var(--font-size-sm);
 			cursor: pointer;
-			transition: all 0.3s ease;
-			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+			transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+			box-shadow: var(--medium-shadow);
+			position: relative;
+			overflow: hidden;
+			font-family: var(--font-family);
+		}
+
+		.btn-primary::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+			transition: left 0.5s ease;
 		}
 
 		.btn-primary:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+			transform: translateY(-1px);
+			box-shadow: var(--deep-shadow);
+		}
+
+		.btn-primary:hover::before {
+			left: 100%;
+		}
+
+		.btn-primary:active {
+			transform: translateY(0);
 		}
 
 		.btn-secondary {
-			background: rgba(255, 255, 255, 0.9);
-			border: 2px solid rgba(102, 126, 234, 0.3);
-			color: #667eea;
+			background: white;
+			border: 2px solid var(--gray-200);
+			color: var(--gray-700);
 			padding: 12px 24px;
-			border-radius: 12px;
+			border-radius: 8px;
 			font-weight: 600;
+			font-size: var(--font-size-sm);
 			cursor: pointer;
-			transition: all 0.3s ease;
+			transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+			position: relative;
+			overflow: hidden;
+			font-family: var(--font-family);
+		}
+
+		.btn-secondary::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.05), transparent);
+			transition: left 0.5s ease;
 		}
 
 		.btn-secondary:hover {
-			background: rgba(102, 126, 234, 0.1);
-			border-color: #667eea;
+			background: var(--gray-50);
+			border-color: var(--gray-300);
+			color: var(--gray-900);
+			transform: translateY(-1px);
+			box-shadow: var(--medium-shadow);
+		}
+
+		.btn-secondary:hover::before {
+			left: 100%;
+		}
+
+		.btn-secondary:active {
+			transform: translateY(0);
 		}
 
 		.input-field {
-			background: rgba(255, 255, 255, 0.9);
-			border: 2px solid rgba(102, 126, 234, 0.2);
-			border-radius: 12px;
+			background: var(--gray-50);
+			border: 2px solid var(--gray-200);
+			border-radius: 8px;
 			padding: 12px 16px;
-			font-size: 16px;
-			transition: all 0.3s ease;
+			font-size: var(--font-size-base);
+			transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 			width: 100%;
+			color: var(--gray-900);
+			font-weight: 500;
+			font-family: var(--font-family);
 		}
 
 		.input-field:focus {
 			outline: none;
-			border-color: #667eea;
-			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+			border-color: var(--primary-blue);
+			box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 			background: white;
+			transform: translateY(-1px);
+		}
+
+		.input-field:hover {
+			border-color: var(--gray-300);
+			background: white;
+		}
+
+		.input-field::placeholder {
+			color: var(--gray-400);
 		}
 
 		.kpi-card {
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border-radius: 20px;
-			padding: 24px;
+			border-radius: 24px;
+			padding: 32px 24px;
 			text-align: center;
 			border: 1px solid rgba(255, 255, 255, 0.2);
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-			transition: all 0.3s ease;
+			box-shadow: var(--subtle-shadow);
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.kpi-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 2px;
+			background: var(--primary-gradient);
+			transform: scaleX(0);
+			transition: transform 0.4s ease;
 		}
 
 		.kpi-card:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+			transform: translateY(-8px);
+			box-shadow: var(--deep-shadow);
+		}
+
+		.kpi-card:hover::before {
+			transform: scaleX(1);
 		}
 
 		.kpi-value {
@@ -140,31 +319,49 @@
 		.chart-container {
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border-radius: 20px;
-			padding: 24px;
+			border-radius: 24px;
+			padding: 32px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			box-shadow: var(--subtle-shadow);
 			height: 400px;
 			position: relative;
+			overflow: hidden;
+		}
+
+		.chart-container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
 		}
 
 		.accordion {
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border-radius: 16px;
-			margin-bottom: 16px;
-			border: 1px solid rgba(255, 255, 255, 0.2);
+			border-radius: 20px;
+			margin-bottom: 20px;
+			border: 2px solid rgba(255, 255, 255, 0.2);
 			overflow: hidden;
 			transition: all 0.3s ease;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 		}
 
 		.accordion:hover {
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+			transform: translateY(-2px);
+		}
+
+		.accordion.active {
+			border-color: rgba(102, 126, 234, 0.3);
+			box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
 		}
 
 		.accordion-header {
-			background: rgba(102, 126, 234, 0.1);
-			padding: 20px 24px;
+			background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+			padding: 24px 28px;
 			cursor: pointer;
 			font-weight: 700;
 			font-size: 18px;
@@ -173,27 +370,98 @@
 			justify-content: space-between;
 			align-items: center;
 			transition: all 0.3s ease;
+			position: relative;
+		}
+
+		.accordion-header::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 4px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		.accordion.active .accordion-header::before {
+			opacity: 1;
 		}
 
 		.accordion-header:hover {
-			background: rgba(102, 126, 234, 0.15);
+			background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
 		}
 
 		.accordion-content {
-			padding: 24px;
+			padding: 28px;
 			display: none;
+			background: rgba(255, 255, 255, 0.5);
 		}
 
 		.accordion.active .accordion-content {
 			display: block;
+			animation: slideDown 0.3s ease-out;
+		}
+
+		@keyframes slideDown {
+			from {
+				opacity: 0;
+				transform: translateY(-10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
 		}
 
 		.accordion-icon {
 			transition: transform 0.3s ease;
+			width: 24px;
+			height: 24px;
 		}
 
 		.accordion.active .accordion-icon {
 			transform: rotate(180deg);
+		}
+
+		/* Configuration section improvements */
+		.config-section {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 20px;
+		}
+
+		@media (min-width: 1024px) {
+			.config-section {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		.config-card {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 24px;
+			border: 2px solid rgba(255, 255, 255, 0.2);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+			transition: all 0.3s ease;
+		}
+
+		.config-card:hover {
+			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+			transform: translateY(-2px);
+		}
+
+		.config-card h3 {
+			font-size: 20px;
+			font-weight: 700;
+			color: #667eea;
+			margin-bottom: 20px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
 		}
 
 		.radio-group {
@@ -203,30 +471,38 @@
 		}
 
 		.radio-option {
-			background: rgba(255, 255, 255, 0.9);
+			background: rgba(255, 255, 255, 0.95);
 			border: 2px solid rgba(102, 126, 234, 0.2);
 			border-radius: 12px;
-			padding: 12px 16px;
+			padding: 14px 18px;
 			cursor: pointer;
 			transition: all 0.3s ease;
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 10px;
+			font-weight: 500;
+			color: #374151;
 		}
 
 		.radio-option:hover {
 			border-color: #667eea;
-			background: rgba(102, 126, 234, 0.1);
+			background: rgba(102, 126, 234, 0.08);
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 		}
 
 		.radio-option input[type="radio"] {
 			accent-color: #667eea;
+			width: 18px;
+			height: 18px;
 		}
 
 		.radio-option.selected {
 			background: var(--primary-gradient);
 			color: white;
 			border-color: #667eea;
+			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+			transform: translateY(-1px);
 		}
 
 		.range-slider {
@@ -262,54 +538,167 @@
 		.table-container {
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border-radius: 20px;
+			border-radius: 16px;
+			padding: 24px;
+			border: 1px solid var(--glass-border);
+			box-shadow: var(--medium-shadow);
 			overflow: hidden;
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 		}
 
 		.table-container table {
 			width: 100%;
 			border-collapse: collapse;
+			margin-top: 16px;
+			font-size: var(--font-size-sm);
+		}
+
+		.table-container th,
+		.table-container td {
+			padding: 12px 16px;
+			text-align: left;
+			border-bottom: 1px solid var(--gray-200);
+			transition: background-color 0.2s ease;
 		}
 
 		.table-container th {
-			background: rgba(102, 126, 234, 0.1);
-			padding: 16px 20px;
-			text-align: left;
-			font-weight: 700;
-			color: #667eea;
+			background: var(--gray-50);
+			font-weight: 600;
+			color: var(--gray-700);
+			font-size: var(--font-size-xs);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			cursor: pointer;
+			user-select: none;
+			position: relative;
 		}
 
-		.table-container td {
-			padding: 16px 20px;
-			border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+		.table-container th:hover {
+			background: var(--gray-100);
+		}
+
+		.table-container th.sortable::after {
+			content: '↕';
+			position: absolute;
+			right: 8px;
+			color: var(--gray-400);
+			font-size: 12px;
+		}
+
+		.table-container th.sort-asc::after {
+			content: '↑';
+			color: var(--primary-blue);
+		}
+
+		.table-container th.sort-desc::after {
+			content: '↓';
+			color: var(--primary-blue);
 		}
 
 		.table-container tr:hover {
-			background: rgba(102, 126, 234, 0.05);
+			background: var(--gray-50);
+		}
+
+		.table-container td {
+			color: var(--gray-700);
+			font-weight: 500;
+		}
+
+		/* Table filter controls */
+		.table-filters {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 16px;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+
+		.table-search {
+			flex: 1;
+			min-width: 200px;
+			max-width: 300px;
+		}
+
+		.table-search input {
+			width: 100%;
+			padding: 8px 12px;
+			border: 1px solid var(--gray-200);
+			border-radius: 6px;
+			font-size: var(--font-size-sm);
+		}
+
+		.table-actions {
+			display: flex;
+			gap: 8px;
+		}
+
+		.table-btn {
+			padding: 6px 12px;
+			border: 1px solid var(--gray-200);
+			background: white;
+			border-radius: 6px;
+			font-size: var(--font-size-xs);
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.table-btn:hover {
+			background: var(--gray-50);
+			border-color: var(--gray-300);
+		}
+
+		.table-btn.active {
+			background: var(--primary-blue);
+			color: white;
+			border-color: var(--primary-blue);
 		}
 
 		.ai-analysis-box {
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border-radius: 20px;
-			padding: 24px;
+			border-radius: 24px;
+			padding: 40px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
-			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+			box-shadow: var(--subtle-shadow);
 			min-height: 200px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.ai-analysis-box::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
 		}
 
 		.spinner {
-			border: 4px solid rgba(102, 126, 234, 0.1);
-			width: 40px;
-			height: 40px;
+			border: 3px solid rgba(102, 126, 234, 0.1);
+			width: 50px;
+			height: 50px;
 			border-radius: 50%;
 			border-left-color: #667eea;
-			animation: spin 1s ease infinite;
+			border-top-color: #764ba2;
+			animation: spin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+			position: relative;
+		}
+
+		.spinner::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background: var(--primary-gradient);
+			transform: translate(-50%, -50%);
+			opacity: 0.3;
 		}
 
 		@keyframes spin {
@@ -351,29 +740,270 @@
 			}
 		}
 
-		.hero-section {
-			text-align: center;
-			padding: 60px 20px;
-			background: rgba(255, 255, 255, 0.1);
-			backdrop-filter: blur(20px);
-			border-radius: 0 0 30px 30px;
+		.enterprise-header {
+			background: rgba(255, 255, 255, 0.08);
+			backdrop-filter: blur(30px);
+			border-bottom: 1px solid var(--glass-border);
+			padding: 24px 0;
 			margin-bottom: 40px;
 		}
 
-		.hero-title {
-			font-size: 3.5rem;
-			font-weight: 900;
+		.header-content {
+			max-width: 1400px;
+			margin: 0 auto;
+			padding: 0 24px;
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+		}
+
+		.header-left {
+			flex: 1;
+		}
+
+		.breadcrumb {
+			display: flex;
+			align-items: center;
+			gap: 8px;
 			margin-bottom: 16px;
+			font-size: var(--font-size-sm);
+			color: var(--gray-300);
+		}
+
+		.breadcrumb-item {
+			color: var(--gray-400);
+			transition: color 0.2s ease;
+		}
+
+		.breadcrumb-item.active {
+			color: var(--primary-blue);
+			font-weight: 600;
+		}
+
+		.breadcrumb-separator {
+			color: var(--gray-400);
+		}
+
+		.header-actions {
+			display: flex;
+			gap: 12px;
+		}
+
+		.header-btn {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 16px;
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid var(--glass-border);
+			border-radius: 8px;
+			color: white;
+			font-size: var(--font-size-sm);
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			backdrop-filter: blur(10px);
+		}
+
+		.header-btn:hover {
+			background: rgba(255, 255, 255, 0.2);
+			border-color: rgba(255, 255, 255, 0.3);
+			transform: translateY(-1px);
+		}
+
+		.header-btn svg {
+			width: 16px;
+			height: 16px;
+		}
+
+		/* Toast Notifications */
+		.toast-container {
+			position: fixed;
+			top: 24px;
+			right: 24px;
+			z-index: 9999;
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.toast {
+			background: white;
+			border-radius: 8px;
+			padding: 16px 20px;
+			box-shadow: var(--deep-shadow);
+			border-left: 4px solid var(--primary-blue);
+			min-width: 300px;
+			max-width: 400px;
+			transform: translateX(100%);
+			opacity: 0;
+			animation: slideIn 0.3s ease forwards;
+			display: flex;
+			align-items: flex-start;
+			gap: 12px;
+		}
+
+		.toast.success {
+			border-left-color: var(--accent-green);
+		}
+
+		.toast.warning {
+			border-left-color: var(--accent-yellow);
+		}
+
+		.toast.error {
+			border-left-color: var(--accent-red);
+		}
+
+		.toast-icon {
+			flex-shrink: 0;
+			width: 20px;
+			height: 20px;
+		}
+
+		.toast-content {
+			flex: 1;
+		}
+
+		.toast-title {
+			font-weight: 600;
+			font-size: var(--font-size-sm);
+			color: var(--gray-900);
+			margin-bottom: 4px;
+		}
+
+		.toast-message {
+			font-size: var(--font-size-sm);
+			color: var(--gray-600);
+			line-height: 1.4;
+		}
+
+		.toast-close {
+			background: none;
+			border: none;
+			color: var(--gray-400);
+			cursor: pointer;
+			padding: 4px;
+			border-radius: 4px;
+			transition: color 0.2s ease;
+		}
+
+		.toast-close:hover {
+			color: var(--gray-600);
+		}
+
+		@keyframes slideIn {
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+
+		@keyframes slideOut {
+			to {
+				transform: translateX(100%);
+				opacity: 0;
+			}
+		}
+
+		/* Advanced Charts Section */
+		.charts-section {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+			gap: 24px;
+			margin-bottom: 32px;
+		}
+
+		.chart-container {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 16px;
+			padding: 24px;
+			border: 1px solid var(--glass-border);
+			box-shadow: var(--medium-shadow);
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.chart-container:hover {
+			box-shadow: var(--deep-shadow);
+			transform: translateY(-2px);
+		}
+
+		.chart-title {
+			font-size: var(--font-size-lg);
+			font-weight: 600;
+			color: var(--gray-900);
+			margin-bottom: 16px;
+			text-align: center;
+		}
+
+		.chart-content {
+			position: relative;
+			height: 200px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.chart-content canvas {
+			max-width: 100%;
+			height: auto;
+			border-radius: 8px;
+		}
+
+		/* Responsive chart adjustments */
+		@media (max-width: 768px) {
+			.charts-section {
+				grid-template-columns: 1fr;
+			}
+
+			.chart-content {
+				height: 150px;
+			}
+		}
+
+		.hero-section {
+			text-align: center;
+			padding: 80px 20px;
+			background: rgba(255, 255, 255, 0.08);
+			backdrop-filter: blur(30px);
+			border-radius: 0 0 40px 40px;
+			margin-bottom: 50px;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero-section::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+		}
+
+		.hero-title {
+			font-size: 4rem;
+			font-weight: 900;
+			margin-bottom: 20px;
 			background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
+			letter-spacing: -0.02em;
+			line-height: 1.1;
 		}
 
 		.hero-subtitle {
-			font-size: 1.2rem;
-			color: rgba(255, 255, 255, 0.9);
+			font-size: 1.375rem;
+			color: rgba(255, 255, 255, 0.95);
 			margin-bottom: 32px;
+			letter-spacing: 0.01em;
+			max-width: 600px;
+			margin-left: auto;
+			margin-right: auto;
 		}
 
 		.main-container {
@@ -396,11 +1026,28 @@
 		}
 
 		.section-title {
-			font-size: 2rem;
+			font-size: 2.5rem;
 			font-weight: 800;
-			margin-bottom: 24px;
+			margin-bottom: 32px;
 			color: white;
 			text-align: center;
+			letter-spacing: -0.01em;
+			position: relative;
+			display: inline-block;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+		.section-title::after {
+			content: '';
+			position: absolute;
+			bottom: -8px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 60px;
+			height: 3px;
+			background: var(--primary-gradient);
+			border-radius: 2px;
 		}
 
 		.profit {
@@ -452,25 +1099,60 @@
 </head>
 
 <body>
+	<!-- Toast Notifications -->
+	<div id="toastContainer" class="toast-container"></div>
+
 	<!-- Floating Particles Background -->
 	<div class="floating-particles" id="particles"></div>
 
-	<!-- Hero Section -->
-	<div class="hero-section">
-		<h1 class="hero-title">Interactive Condo Investment Dashboard</h1>
-		<p class="hero-subtitle">Analyze your real estate investment potential with AI-powered insights</p>
-	</div>
+	<!-- Enterprise Header -->
+	<header class="enterprise-header">
+		<div class="header-content">
+			<div class="header-left">
+				<div class="breadcrumb">
+					<span class="breadcrumb-item">Real Estate</span>
+					<span class="breadcrumb-separator">/</span>
+					<span class="breadcrumb-item">Investment Analysis Dashboard</span>
+				</div>
+				<h1 class="hero-title">Interactive Investment Dashboard</h1>
+			</div>
+			<div class="header-right">
+				<div class="header-actions">
+					<button class="header-btn" id="exportBtn">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+							<polyline points="7,10 12,15 17,10" />
+							<line x1="12" y1="15" x2="12" y2="3" />
+						</svg>
+						Export
+					</button>
+					<button class="header-btn" id="shareBtn">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<circle cx="18" cy="5" r="3" />
+							<circle cx="6" cy="12" r="3" />
+							<circle cx="18" cy="19" r="3" />
+							<line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+							<line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+						</svg>
+						Share
+					</button>
+				</div>
+			</div>
+		</div>
+	</header>
 
 	<div class="main-container">
-		<!-- Input Forms Grid -->
-		<div class="grid-layout">
+		<!-- Configuration Section -->
+		<div class="config-section">
 			<!-- Left Column -->
 			<div class="space-y-6">
 				<!-- Property Details -->
 				<div class="accordion active">
 					<div class="accordion-header">
 						<span>🏠 Property Details</span>
-						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+						<svg class="accordion-icon" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
 							<path fill-rule="evenodd"
 								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
 								clip-rule="evenodd" />
@@ -479,17 +1161,19 @@
 					<div class="accordion-content">
 						<div class="space-y-4">
 							<div>
-								<label class="block text-sm font-semibold mb-2">Condo Purchase Price ($)</label>
+								<label class="block text-sm font-semibold mb-3 text-gray-700">Purchase Price
+									($)</label>
 								<input type="number" id="purchasePrice" class="input-field" value="740000" min="100000"
 									step="10000">
 							</div>
 							<div>
-								<label class="block text-sm font-semibold mb-2">Pre-build Down Payment ($)</label>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Pre-build Down Payment
+									($)</label>
 								<input type="number" id="prebuildDownPayment" class="input-field" value="148000" min="0"
 									step="1000">
 							</div>
 							<div>
-								<label class="block text-sm font-semibold mb-2">Additional Deposit</label>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Additional Deposit</label>
 								<div class="radio-group">
 									<label class="radio-option selected">
 										<input type="radio" name="additionalDeposit" value="0" checked>
@@ -509,11 +1193,11 @@
 					</div>
 				</div>
 
-				<!-- Rental Details -->
+				<!-- Financial & Cost Details -->
 				<div class="accordion active">
 					<div class="accordion-header">
-						<span>💰 Rental Details</span>
-						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+						<span>💳 Financial & Cost Details</span>
+						<svg class="accordion-icon" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
 							<path fill-rule="evenodd"
 								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
 								clip-rule="evenodd" />
@@ -522,7 +1206,67 @@
 					<div class="accordion-content">
 						<div class="space-y-4">
 							<div>
-								<label class="block text-sm font-semibold mb-2">Rental Type</label>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Mortgage Interest
+									Rate</label>
+								<select id="interestRate" class="input-field">
+									<option value="3.99">3.99%</option>
+									<option value="4.09">4.09%</option>
+									<option value="4.25">4.25%</option>
+									<option value="4.5" selected>4.50%</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Annual Property Taxes
+									($)</label>
+								<input type="number" id="propertyTax" class="input-field" value="2950" min="0"
+									step="50">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Monthly Strata Fees
+									($)</label>
+								<input type="number" id="strataFees" class="input-field" value="461" min="0" step="10">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Realtor Fees (Purchase &
+									Sale, %)</label>
+								<input type="number" id="realtorFees" class="input-field" value="2" min="0" max="10"
+									step="0.1">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Property Transfer Tax (%)
+									<span id="pttValue" class="text-sm text-gray-600">1.75%</span></label>
+								<input type="range" id="propertyTransferTax" class="range-slider" value="1.75" min="0"
+									max="5" step="0.01">
+							</div>
+							<div>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Annual Maintenance/Repair
+									(% of Annual
+									Gross Rent) <span id="maintenanceValue"
+										class="text-sm text-gray-600">8.0%</span></label>
+								<input type="range" id="maintenanceRate" class="range-slider" value="8" min="0" max="20"
+									step="0.5">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Column -->
+			<div class="space-y-6">
+				<!-- Rental Details -->
+				<div class="accordion active">
+					<div class="accordion-header">
+						<span>💰 Rental Details</span>
+						<svg class="accordion-icon" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd"
+								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+								clip-rule="evenodd" />
+						</svg>
+					</div>
+					<div class="accordion-content">
+						<div class="space-y-4">
+							<div>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Rental Type</label>
 								<div class="radio-group">
 									<label class="radio-option selected">
 										<input type="radio" name="rentalType" value="longTerm" checked>
@@ -538,14 +1282,15 @@
 							<div id="longTermRentalInputs">
 								<div class="space-y-4">
 									<div>
-										<label class="block text-sm font-semibold mb-2">Monthly Rental Income
-											($)</label>
+										<label class="block text-sm font-semibold mb-2 text-gray-700">Monthly Rental
+											Income ($)</label>
 										<input type="number" id="rentalIncome" class="input-field" value="3300" min="0"
 											step="100">
 									</div>
 									<div>
-										<label class="block text-sm font-semibold mb-2">Annual Vacancy Rate (%) <span
-												id="vacancyValue" class="text-sm text-gray-600">2.0%</span></label>
+										<label class="block text-sm font-semibold mb-2 text-gray-700">Annual Vacancy
+											Rate (%) <span id="vacancyValue"
+												class="text-sm text-gray-600">2.0%</span></label>
 										<input type="range" id="vacancyRate" class="range-slider" value="2" min="0"
 											max="10" step="0.1">
 									</div>
@@ -555,13 +1300,14 @@
 							<div id="shortTermRentalInputs" class="hidden">
 								<div class="space-y-4">
 									<div>
-										<label class="block text-sm font-semibold mb-2">Short-Term Monthly Gross Income
-											($)</label>
+										<label class="block text-sm font-semibold mb-2 text-gray-700">Short-Term Monthly
+											Gross Income ($)</label>
 										<input type="number" id="shortTermRentalIncome" class="input-field" value="6000"
 											min="0" step="100">
 									</div>
 									<div>
-										<label class="block text-sm font-semibold mb-2">Short-Term Occupancy Rate (%)
+										<label class="block text-sm font-semibold mb-2 text-gray-700">Short-Term
+											Occupancy Rate (%)
 											<span id="shortTermOccupancyValue"
 												class="text-sm text-gray-600">60%</span></label>
 										<input type="range" id="shortTermOccupancyRate" class="range-slider" value="60"
@@ -572,15 +1318,12 @@
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Right Column -->
-			<div class="space-y-6">
-				<!-- Financial & Cost Details -->
+				<!-- Investment Horizon & Sale Scenario -->
 				<div class="accordion active">
 					<div class="accordion-header">
-						<span>💳 Financial & Cost Details</span>
-						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+						<span>⏰ Investment Horizon & Sale Scenario</span>
+						<svg class="accordion-icon" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
 							<path fill-rule="evenodd"
 								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
 								clip-rule="evenodd" />
@@ -589,60 +1332,8 @@
 					<div class="accordion-content">
 						<div class="space-y-4">
 							<div>
-								<label class="block text-sm font-semibold mb-2">Mortgage Interest Rate</label>
-								<select id="interestRate" class="input-field">
-									<option value="3.99">3.99%</option>
-									<option value="4.09">4.09%</option>
-									<option value="4.25">4.25%</option>
-									<option value="4.5" selected>4.50%</option>
-								</select>
-							</div>
-							<div>
-								<label class="block text-sm font-semibold mb-2">Annual Property Taxes ($)</label>
-								<input type="number" id="propertyTax" class="input-field" value="2950" min="0"
-									step="50">
-							</div>
-							<div>
-								<label class="block text-sm font-semibold mb-2">Monthly Strata Fees ($)</label>
-								<input type="number" id="strataFees" class="input-field" value="461" min="0" step="10">
-							</div>
-							<div>
-								<label class="block text-sm font-semibold mb-2">Realtor Fees (Purchase & Sale,
-									%)</label>
-								<input type="number" id="realtorFees" class="input-field" value="2" min="0" max="10"
-									step="0.1">
-							</div>
-							<div>
-								<label class="block text-sm font-semibold mb-2">Property Transfer Tax (%) <span
-										id="pttValue" class="text-sm text-gray-600">1.75%</span></label>
-								<input type="range" id="propertyTransferTax" class="range-slider" value="1.75" min="0"
-									max="5" step="0.01">
-							</div>
-							<div>
-								<label class="block text-sm font-semibold mb-2">Annual Maintenance/Repair (% of Annual
-									Gross Rent) <span id="maintenanceValue"
-										class="text-sm text-gray-600">8.0%</span></label>
-								<input type="range" id="maintenanceRate" class="range-slider" value="8" min="0" max="20"
-									step="0.5">
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Investment Horizon -->
-				<div class="accordion active">
-					<div class="accordion-header">
-						<span>⏰ Investment Horizon</span>
-						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd"
-								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-								clip-rule="evenodd" />
-						</svg>
-					</div>
-					<div class="accordion-content">
-						<div class="space-y-4">
-							<div>
-								<label class="block text-sm font-semibold mb-2">Length of Hold (Years)</label>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Length of Hold
+									(Years)</label>
 								<select id="holdLength" class="input-field">
 									<option value="2">2 Years</option>
 									<option value="5">5 Years</option>
@@ -650,7 +1341,7 @@
 								</select>
 							</div>
 							<div>
-								<label class="block text-sm font-semibold mb-2">Payment Frequency</label>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Payment Frequency</label>
 								<div class="radio-group">
 									<label class="radio-option selected">
 										<input type="radio" name="paymentFrequency" value="monthly" checked>
@@ -662,24 +1353,9 @@
 									</label>
 								</div>
 							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Sale Scenario -->
-				<div class="accordion active">
-					<div class="accordion-header">
-						<span>📈 Sale Scenario</span>
-						<svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-							<path fill-rule="evenodd"
-								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-								clip-rule="evenodd" />
-						</svg>
-					</div>
-					<div class="accordion-content">
-						<div class="space-y-4">
 							<div>
-								<label class="block text-sm font-semibold mb-2">Expected Sale Price Change</label>
+								<label class="block text-sm font-semibold mb-2 text-gray-700">Expected Sale Price
+									Change</label>
 								<div class="radio-group">
 									<label class="radio-option selected">
 										<input type="radio" name="saleScenario" value="-0.10" checked>
@@ -701,7 +1377,10 @@
 			</div>
 		</div>
 
-		<!-- Reset Button -->
+		<!-- Spacing after configuration -->
+		<div class="mb-12"></div>
+
+		<!-- Action Buttons -->
 		<div class="text-center mb-8">
 			<button id="resetBtn" class="btn-secondary">🔄 Reset All Parameters</button>
 		</div>
@@ -709,6 +1388,22 @@
 		<!-- Results Section -->
 		<div id="results">
 			<h2 class="section-title">Investment Summary</h2>
+
+			<!-- Advanced Charts Section -->
+			<div class="charts-section">
+				<div class="chart-container">
+					<h3 class="chart-title">Investment Breakdown</h3>
+					<div class="chart-content">
+						<canvas id="investmentChart" width="400" height="200"></canvas>
+					</div>
+				</div>
+				<div class="chart-container">
+					<h3 class="chart-title">Cash Flow Timeline</h3>
+					<div class="chart-content">
+						<canvas id="cashFlowChart" width="400" height="200"></canvas>
+					</div>
+				</div>
+			</div>
 
 			<!-- KPI Cards -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -754,7 +1449,7 @@
 
 			<!-- Detailed Breakdown -->
 			<h2 class="section-title mt-12">Detailed Breakdown</h2>
-			<div id="breakdownTableContainer" class="table-container"></div>
+			<div id="breakdownTableContainer" class="table-container mb-16"></div>
 		</div>
 	</div>
 
@@ -764,6 +1459,191 @@
 		// Global chart instances
 		let initialOutlayChartInstance;
 		let profitLossChartInstance;
+		let investmentChartInstance;
+		let cashFlowChartInstance;
+
+		// Advanced chart functions
+		function createInvestmentChart(data) {
+			const ctx = document.getElementById('investmentChart');
+			if (!ctx) return;
+
+			const canvas = ctx;
+			const context = canvas.getContext('2d');
+			const width = canvas.width;
+			const height = canvas.height;
+
+			// Clear canvas
+			context.clearRect(0, 0, width, height);
+
+			// Draw chart background
+			context.fillStyle = '#f8fafc';
+			context.fillRect(0, 0, width, height);
+
+			// Chart data
+			const chartData = data || {
+				prebuildDownPayment: 148000,
+				additionalDeposit: 0,
+				remainingDownPayment: 222000,
+				totalInvestment: 370000
+			};
+
+			// Calculate percentages based on the purchase price (not total investment)
+			// This shows how the purchase price is financed
+			const purchasePrice = chartData.prebuildDownPayment + chartData.additionalDeposit + chartData.remainingDownPayment;
+			const prebuildPercent = (chartData.prebuildDownPayment / purchasePrice) * 100;
+			const additionalPercent = (chartData.additionalDeposit / purchasePrice) * 100;
+			const remainingPercent = (chartData.remainingDownPayment / purchasePrice) * 100;
+
+			// Colors
+			const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+
+			// Draw pie chart
+			const centerX = width / 2;
+			const centerY = height / 2 - 20; // Move chart up to make room for legend
+			const radius = Math.min(width, height) * 0.25; // Smaller radius to make room
+
+			let currentAngle = 0;
+			const segments = [
+				{ label: 'Pre-build Down Payment', value: prebuildPercent, color: colors[0] },
+				{ label: 'Additional Deposit', value: additionalPercent, color: colors[1] },
+				{ label: 'Remaining Down Payment', value: remainingPercent, color: colors[2] }
+			];
+
+			segments.forEach((segment, index) => {
+				const sliceAngle = (segment.value / 100) * 2 * Math.PI;
+
+				// Draw pie slice
+				context.beginPath();
+				context.moveTo(centerX, centerY);
+				context.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+				context.closePath();
+				context.fillStyle = segment.color;
+				context.fill();
+
+				// Draw label (only if slice is large enough)
+				if (segment.value > 5) {
+					const labelAngle = currentAngle + sliceAngle / 2;
+					const labelX = centerX + Math.cos(labelAngle) * (radius + 20);
+					const labelY = centerY + Math.sin(labelAngle) * (radius + 20);
+
+					context.fillStyle = '#1e293b';
+					context.font = '9px Inter, sans-serif';
+					context.textAlign = 'center';
+					context.fillText(`${segment.value.toFixed(1)}%`, labelX, labelY);
+				}
+
+				currentAngle += sliceAngle;
+			});
+
+			// Draw legend at the bottom with better spacing
+			const legendY = height - 40;
+			const legendSpacing = width / segments.length;
+
+			segments.forEach((segment, index) => {
+				const legendX = (legendSpacing * index) + (legendSpacing / 2) - 60; // Center each legend item
+
+				// Legend color box
+				context.fillStyle = segment.color;
+				context.fillRect(legendX, legendY, 10, 10);
+
+				// Legend text
+				context.fillStyle = '#1e293b';
+				context.font = '9px Inter, sans-serif';
+				context.textAlign = 'left';
+				context.fillText(segment.label, legendX + 15, legendY + 8);
+			});
+		}
+
+		function createCashFlowChart(data) {
+			const ctx = document.getElementById('cashFlowChart');
+			if (!ctx) return;
+
+			const canvas = ctx;
+			const context = canvas.getContext('2d');
+			const width = canvas.width;
+			const height = canvas.height;
+
+			// Clear canvas
+			context.clearRect(0, 0, width, height);
+
+			// Draw chart background
+			context.fillStyle = '#f8fafc';
+			context.fillRect(0, 0, width, height);
+
+			// Chart data - simulate cash flow over time
+			const months = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+			const cashFlow = data || [-370000, -12000, -12000, -12000, 800000]; // Initial investment, annual costs, final sale
+
+			// Find min and max for scaling
+			const minValue = Math.min(...cashFlow);
+			const maxValue = Math.max(...cashFlow);
+			const range = maxValue - minValue;
+
+			// Chart dimensions
+			const margin = 40;
+			const chartWidth = width - 2 * margin;
+			const chartHeight = height - 2 * margin;
+
+			// Draw grid lines
+			context.strokeStyle = '#e2e8f0';
+			context.lineWidth = 1;
+			for (let i = 0; i <= 4; i++) {
+				const y = margin + (i * chartHeight / 4);
+				context.beginPath();
+				context.moveTo(margin, y);
+				context.lineTo(width - margin, y);
+				context.stroke();
+			}
+
+			// Draw cash flow line
+			context.strokeStyle = '#3b82f6';
+			context.lineWidth = 3;
+			context.beginPath();
+
+			cashFlow.forEach((value, index) => {
+				const x = margin + (index * chartWidth / (cashFlow.length - 1));
+				const y = margin + chartHeight - ((value - minValue) / range * chartHeight);
+
+				if (index === 0) {
+					context.moveTo(x, y);
+				} else {
+					context.lineTo(x, y);
+				}
+
+				// Draw data points
+				context.fillStyle = '#3b82f6';
+				context.beginPath();
+				context.arc(x, y, 4, 0, 2 * Math.PI);
+				context.fill();
+			});
+
+			context.stroke();
+
+			// Draw labels
+			context.fillStyle = '#64748b';
+			context.font = '10px Inter, sans-serif';
+			context.textAlign = 'center';
+
+			// X-axis labels
+			months.forEach((month, index) => {
+				const x = margin + (index * chartWidth / (months.length - 1));
+				context.fillText(month, x, height - 10);
+			});
+
+			// Y-axis labels
+			for (let i = 0; i <= 4; i++) {
+				const value = minValue + (i * range / 4);
+				const y = margin + (i * chartHeight / 4);
+				context.textAlign = 'right';
+				context.fillText(`$${(value / 1000).toFixed(0)}k`, margin - 10, y + 3);
+			}
+
+			// Chart title
+			context.fillStyle = '#1e293b';
+			context.font = '12px Inter, sans-serif';
+			context.textAlign = 'center';
+			context.fillText('5-Year Cash Flow Projection', width / 2, 20);
+		}
 
 		// Create floating particles background
 		function createParticles() {
@@ -1086,7 +1966,7 @@
 			aiSpinner.classList.remove('hidden');
 			aiAnalysisBox.classList.add('justify-center', 'items-center');
 
-			const prompt = `Analyze the following condo investment scenario and provide a concise summary of its potential profitability, key risks, and benefits. Focus on the financial outcome, especially the Net Profit/Loss.
+			const prompt = `Analyze the following investment scenario and provide a concise summary of its potential profitability, key risks, and benefits. Focus on the financial outcome, especially the Net Profit/Loss.
 
             Investment Data:
             - Purchase Price: ${formatCurrency(data.purchasePrice)}
@@ -1324,6 +2204,29 @@
 
 				createProfitLossChart(profitLossLabels, profitLossResults);
 
+				// Update Advanced Charts with real data
+				const investmentChartData = {
+					prebuildDownPayment: prebuildDownPayment,
+					additionalDeposit: additionalDepositAmount,
+					remainingDownPayment: mortgageAmount,
+					totalInvestment: purchasePrice // Use purchase price for percentage calculations
+				};
+				createInvestmentChart(investmentChartData);
+
+				// Calculate cash flow data for the timeline
+				const annualOperatingCosts = (annualPropertyTax + (monthlyStrataFees * 12) + (rentalIncomePerMonth * 12 * maintenanceRate));
+				const annualNetRentalIncome = (rentalIncomePerMonth * 12) * (1 - actualVacancyRate);
+				const netAnnualCashFlow = annualNetRentalIncome - annualOperatingCosts - (standardMonthlyPayment * 12);
+
+				const cashFlowData = [
+					-totalInitialCashOutlay, // Year 1: Initial investment
+					netAnnualCashFlow, // Year 2: Net cash flow
+					netAnnualCashFlow, // Year 3: Net cash flow
+					netAnnualCashFlow, // Year 4: Net cash flow
+					currentSalePrice - remainingBalance + netAnnualCashFlow // Year 5: Sale proceeds + final year cash flow
+				];
+				createCashFlowChart(cashFlowData);
+
 				// Trigger AI Analysis
 				getAiAnalysis({
 					purchasePrice,
@@ -1406,6 +2309,144 @@
 			calculateProfitability();
 		}
 
+		// Debounce utility function
+		function debounce(func, wait) {
+			let timeout;
+			return function executedFunction(...args) {
+				const later = () => {
+					clearTimeout(timeout);
+					func(...args);
+				};
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+			};
+		}
+
+		// Toast notification system
+		function showToast(type, title, message, duration = 5000) {
+			const toastContainer = document.getElementById('toastContainer');
+			const toast = document.createElement('div');
+			toast.className = `toast ${type}`;
+
+			const icons = {
+				success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>',
+				warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+				error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+				info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+			};
+
+			toast.innerHTML = `
+				<div class="toast-icon">${icons[type] || icons.info}</div>
+				<div class="toast-content">
+					<div class="toast-title">${title}</div>
+					<div class="toast-message">${message}</div>
+				</div>
+				<button class="toast-close" onclick="this.parentElement.remove()">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+			`;
+
+			toastContainer.appendChild(toast);
+
+			setTimeout(() => {
+				toast.style.animation = 'slideOut 0.3s ease forwards';
+				setTimeout(() => toast.remove(), 300);
+			}, duration);
+		}
+
+		// Export functionality
+		function exportData() {
+			const data = {
+				timestamp: new Date().toISOString(),
+				inputs: {
+					purchasePrice: document.getElementById('purchasePrice').value,
+					prebuildDownPayment: document.getElementById('prebuildDownPayment').value,
+					additionalDeposit: document.querySelector('input[name="additionalDeposit"]:checked').value,
+					// Add other inputs as needed
+				},
+				results: {
+					totalInvestment: document.getElementById('totalInvestment').textContent,
+					monthlyPayment: document.getElementById('monthlyPayment').textContent,
+					roi: document.getElementById('roi').textContent,
+					// Add other results as needed
+				}
+			};
+
+			const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = `condo-investment-${new Date().toISOString().split('T')[0]}.json`;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			URL.revokeObjectURL(url);
+
+			showToast('success', 'Export Successful', 'Your investment data has been exported successfully.');
+		}
+
+		// Share functionality
+		function shareData() {
+			if (navigator.share) {
+				navigator.share({
+					title: 'Investment Analysis',
+					text: 'Check out my investment analysis!',
+					url: window.location.href
+				}).then(() => {
+					showToast('success', 'Shared Successfully', 'Your analysis has been shared.');
+				}).catch(() => {
+					showToast('error', 'Share Failed', 'Unable to share at this time.');
+				});
+			} else {
+				// Fallback: copy to clipboard
+				navigator.clipboard.writeText(window.location.href).then(() => {
+					showToast('success', 'Link Copied', 'Analysis link copied to clipboard.');
+				}).catch(() => {
+					showToast('error', 'Copy Failed', 'Unable to copy link to clipboard.');
+				});
+			}
+		}
+
+		// Keyboard shortcuts for power users
+		function initKeyboardShortcuts() {
+			document.addEventListener('keydown', (e) => {
+				// Ctrl/Cmd + E: Export
+				if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+					e.preventDefault();
+					exportData();
+				}
+
+				// Ctrl/Cmd + S: Share
+				if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+					e.preventDefault();
+					shareData();
+				}
+
+				// Ctrl/Cmd + R: Reset
+				if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+					e.preventDefault();
+					document.getElementById('resetBtn').click();
+				}
+
+				// Escape: Close any open modals or focus management
+				if (e.key === 'Escape') {
+					// Close any open dropdowns or modals
+					const activeElements = document.querySelectorAll('.active');
+					activeElements.forEach(el => {
+						if (el.classList.contains('dropdown') || el.classList.contains('modal')) {
+							el.classList.remove('active');
+						}
+					});
+				}
+			});
+		}
+
+		// Debounced calculation function
+		const debouncedCalculate = debounce(calculateProfitability, 300);
+
 		// Event Listeners
 		document.addEventListener('DOMContentLoaded', () => {
 			// Initialize UI components
@@ -1427,15 +2468,32 @@
 				document.getElementById('shortTermOccupancyValue').textContent = `${parseFloat(event.target.value).toFixed(0)}%`;
 			});
 
-			// Recalculate on any input change
+			// Recalculate on any input change with debouncing
 			const inputs = document.querySelectorAll('input, select');
 			inputs.forEach(input => {
 				if (input.type === 'range' || input.type === 'text' || input.type === 'number') {
-					input.addEventListener('input', calculateProfitability);
+					input.addEventListener('input', debouncedCalculate);
 				} else {
-					input.addEventListener('change', calculateProfitability);
+					input.addEventListener('change', debouncedCalculate);
 				}
 			});
+
+			// Header button event listeners
+			document.getElementById('exportBtn').addEventListener('click', exportData);
+			document.getElementById('shareBtn').addEventListener('click', shareData);
+
+			// Initialize advanced charts with initial data
+			const initialData = {
+				prebuildDownPayment: 148000,
+				additionalDeposit: 0,
+				remainingDownPayment: 222000,
+				totalInvestment: 370000
+			};
+			createInvestmentChart(initialData);
+			createCashFlowChart();
+
+			// Initialize keyboard shortcuts
+			initKeyboardShortcuts();
 
 			// Rental type toggle listener
 			document.querySelectorAll('input[name="rentalType"]').forEach(radio => {
